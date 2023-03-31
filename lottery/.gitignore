@@ -1,1 +1,31 @@
 .env
+lottery-dapp/node_modules
+lottery-dapp/.pnp
+lottery-dapp/.pnp.js
+
+# testing
+lottery-dapp/coverage
+
+# next.js
+lottery-dapp/.next/
+lottery-dapp/out/
+
+# production
+lottery-dapp/build
+
+# misc
+lottery-dapp/.DS_Store
+lottery-dapp/*.pem
+
+# debug
+lottery-dapp/npm-debug.log*
+lottery-dapp/yarn-debug.log*
+lottery-dapp/yarn-error.log*
+lottery-dapp/.pnpm-debug.log*
+
+# local env files
+lottery-dapp/.env*.local
+
+# vercel
+lottery-dapp/.vercel
+
