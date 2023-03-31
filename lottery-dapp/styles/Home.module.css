@@ -1,0 +1,17 @@
+.main {
+  min-height: 100vh;
+}
+
+.main h1{
+  font-size: 3em;
+  font-weight: bold;
+}
+
+.lotteryinfo a{
+  font-size: 0.9em;
+}
+
+.navbar  {
+  background-color: transparent;
+  background-image: none;
+}
