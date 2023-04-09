@@ -89,21 +89,37 @@ export default function Home() {
 
   }
 
-  // 1:56 rewatch this
   const pickWinnerHandler = async () => {
     setError('')
     setSuccessMsg('')
 
     console.log(`address from pick winner:: ${address}`)
-    // const p = await lcContract.methods.players(1).call()
     // console.log(p)
-    const startTime = performance.now()
+
+    // Idea
+    // Get the random word before invoking the requestRandomWords function
+    // Then after do while true, then get the random word from the smart contract
+    // Only exit once != originalRandom
+    const before = await lcContract.methods.randomResult().call()
+    console.log(before)
+    setSuccessMsg("before: "+before)
     try {
+      const startTime = performance.now()
       await lcContract.methods.requestRandomWords().send({
         from: address,
         gas: 300000,
         gasPrice: null
       })
+      while (true){
+        await new Promise(r => setTimeout(r, 10000));
+        const after = await lcContract.methods.randomResult().call()
+        console.log(`after = ${after}`)
+        if (after != before){
+          const endTime = performance.now()
+          setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
+          break
+        }
+      }
       const endTime = performance.now()
       setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
       const date = new Date(endTime-startTime);
