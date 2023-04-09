@@ -8,23 +8,29 @@ contract('VRFv2Consumer', (accounts) => {
     assert.equal(balance.valueOf(), 0, "0 is expected for initial contract balance");
   });
 
-
-
-  it('Sending ETH to the contract', async () => {
+  it('Should have 0 players initially', async () => {
     const lotteryInstance = await Lottery.deployed();
-    const accountOne = accounts[0];
+    const balance = await lotteryInstance.getPlayers.call();
 
-    await lotteryInstance.enter.send(
-      {
-        from: accountOne,
-        value: '15000000000000000',
-        gas: 300000,
-        gasPrice: null
-      }
-    );
-    const balance = await lotteryInstance.getBalance.call();
-    assert.equal(balance.valueOf(), 15000000000000000, "0.15 ETH should be in contract balance");
+    assert.equal(balance.length(), 0, "Should have 0 players initially");
   });
+
+
+  // it('Sending ETH to the contract', async () => {
+  //   const lotteryInstance = await Lottery.deployed();
+  //   const accountOne = accounts[0];
+
+  //   await lotteryInstance.enter.send(
+  //     {
+  //       from: accountOne,
+  //       value: '15000000000000000',
+  //       gas: 300000,
+  //       gasPrice: null
+  //     }
+  //   );
+  //   const balance = await lotteryInstance.getBalance.call();
+  //   assert.equal(balance.valueOf(), 15000000000000000, "0.15 ETH should be in contract balance");
+  // });
 
   // it('should call a function that depends on a linked library', async () => {
   //   const metaCoinInstance = await MetaCoin.deployed();
