@@ -10,7 +10,6 @@ import lotteryContract from '../../blockchain/lottery10'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import 'bulma/css/bulma.css'
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
@@ -97,15 +96,27 @@ export default function Home() {
     console.log(`address from pick winner:: ${address}`)
     // const p = await lcContract.methods.players(1).call()
     // console.log(p)
-    const startTime = performance.now()
+    const before = await lcContract.methods.randomResult().call()
+    console.log(`before = ${before}`)
     try {
       await lcContract.methods.requestRandomWords().send({
         from: address,
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
+      const startTime = performance.now()
+      while (true){
+        const after = await lcContract.methods.randomResult().call()
+        console.log(`after = ${after}`)
+        if (after != before){
+          break
+        }
+      }
       const endTime = performance.now()
       setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
+      console.log(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)          
       const date = new Date(endTime-startTime);
       console.log(`${date.getMinutes()}:${date.getSeconds()}`)
 
@@ -123,15 +134,14 @@ export default function Home() {
     console.log(rands)
     //setSuccessMsg(rands)
     //setSuccessMsg(req[lrqid].randomWords)
-    const startTime = performance.now()
     try {
       await lcContract.methods.payWinner().send({
         from: address,
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
-      const endTime = performance.now()
-      setSuccessMsg(`Winner paid. Time taken: ${endTime - startTime} milliseconds`)
       const date = new Date(endTime-startTime);
       console.log(`${date.getMinutes()}:${date.getSeconds()}`)
 

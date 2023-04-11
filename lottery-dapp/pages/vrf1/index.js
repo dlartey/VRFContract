@@ -74,6 +74,10 @@ export default function Home() {
 
   // Handler to enter lottery (check to ensure user can't enter more than once)
   const enterLotteryHandler = async () => {
+
+    // const lrqid = await lcContract.methods.lastRequestId().call()
+    // //const status = await lcContract.methods.requestIds(lrqid).call()
+    // console.log(lrqid)
     setError('')
     try {
       await lcContract.methods.enter().send({
@@ -92,7 +96,6 @@ export default function Home() {
   const pickWinnerHandler = async () => {
     setError('')
     setSuccessMsg('')
-
     console.log(`address from pick winner:: ${address}`)
     // console.log(p)
 
@@ -101,30 +104,28 @@ export default function Home() {
     // Then after do while true, then get the random word from the smart contract
     // Only exit once != originalRandom
     const before = await lcContract.methods.randomResult().call()
-    console.log(before)
-    setSuccessMsg("before: "+before)
+    console.log(`before = ${before}`)
     try {
-      const startTime = performance.now()
       await lcContract.methods.requestRandomWords().send({
         from: address,
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
+      const startTime = performance.now()
       while (true){
-        await new Promise(r => setTimeout(r, 10000));
         const after = await lcContract.methods.randomResult().call()
         console.log(`after = ${after}`)
         if (after != before){
-          const endTime = performance.now()
-          setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
           break
         }
       }
       const endTime = performance.now()
       setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
+      console.log(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)          
       const date = new Date(endTime-startTime);
       console.log(`${date.getMinutes()}:${date.getSeconds()}`)
-
     } catch (err) {
       setError(err.message)
     }
@@ -137,15 +138,14 @@ export default function Home() {
     const rands = await lcContract.methods.randomResult().call()
     setSuccessMsg(rands)
     //setSuccessMsg(req[lrqid].randomWords)
-    const startTime = performance.now()
     try {
       await lcContract.methods.payWinner().send({
         from: address,
         gas: 300000,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
-      const endTime = performance.now()
-      setSuccessMsg(`Winner paid. Time taken: ${endTime - startTime} milliseconds`)
       const date = new Date(endTime-startTime);
       console.log(`${date.getMinutes()}:${date.getSeconds()}`)
 
@@ -286,34 +286,6 @@ export default function Home() {
               {/* Shows information about lottery pot & history */}
               <div className={`${styles.lotteryinfo} column is-one-third`}>
                 {/* Consists of Lottery History, Lottery Pot & Lottery Players */}
-                <section className='mt-5'>
-                  {/* Bulma class to style the information */}
-                  <div className='card has-background-link has-text-light'>
-                    <div className='card-content'>
-                      <div className='content'>
-                        <h2 className='has-text-light'>Lottery History</h2>
-                        {/* Custom className */}
-
-                        {
-                          (lotteryHistory && lotteryHistory.length > 0) && lotteryHistory.map(item => {
-                            if (lotteryId != item.id) {
-                              return <div className='history-entry mt-3' key={item.id}>
-                                <div className='has-text-light'> Lottery #{item.id} Winner:</div>
-                                <div>
-                                  <a className='has-text-light' href={`https://goerli.etherscan.io/address/${item.address}`} target='_ '>
-                                    {item.address}
-                                  </a>
-                                </div>
-                              </div>
-                            }
-
-                          })
-                        }
-
-                      </div>
-                    </div>
-                  </div>
-                </section>
 
                 {/* Second Bulma Card */}
                 <section className='mt-5'>
@@ -348,6 +320,36 @@ export default function Home() {
                         <div className='history-entry has-text-light'>
                           <p> {lotteryPot} ETH</p>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+
+                <section className='mt-5'>
+                  {/* Bulma class to style the information */}
+                  <div className='card has-background-link has-text-light'>
+                    <div className='card-content'>
+                      <div className='content'>
+                        <h2 className='has-text-light'>Lottery History</h2>
+                        {/* Custom className */}
+
+                        {
+                          (lotteryHistory && lotteryHistory.length > 0) && lotteryHistory.map(item => {
+                            if (lotteryId != item.id) {
+                              return <div className='history-entry mt-3' key={item.id}>
+                                <div className='has-text-light'> Lottery #{item.id} Winner:</div>
+                                <div>
+                                  <a className='has-text-light' href={`https://goerli.etherscan.io/address/${item.address}`} target='_ '>
+                                    {item.address}
+                                  </a>
+                                </div>
+                              </div>
+                            }
+
+                          })
+                        }
+
                       </div>
                     </div>
                   </div>

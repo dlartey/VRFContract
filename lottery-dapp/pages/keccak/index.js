@@ -96,18 +96,29 @@ export default function Home() {
     console.log(`address from pick winner:: ${address}`)
     // const p = await lcContract.methods.players(1).call()
     // console.log(p)
-    const startTime = performance.now()
+    const before = await lcContract.methods.random().call()
+    console.log(`before = ${before}`)
     try {
       await lcContract.methods.getRandomNumber().send({
         from: address,
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
+      const startTime = performance.now()
+      while (true){
+        const after = await lcContract.methods.random().call()
+        console.log(`after = ${after}`)
+        if (after != before){
+          break
+        }
+      }
       const endTime = performance.now()
       setSuccessMsg(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
+      console.log(`Random Number Generated. Time taken: ${endTime - startTime} milliseconds`)
       const date = new Date(endTime-startTime);
       console.log(`${date.getMinutes()}:${date.getSeconds()}`)
-
     } catch (err) {
       setError(err.message)
     }
@@ -119,19 +130,15 @@ export default function Home() {
     setSuccessMsg('')
     const rands = await lcContract.methods.random().call()
     setSuccessMsg(rands)
-    //setSuccessMsg(req[lrqid].randomWords)
-    const startTime = performance.now()
     try {
       await lcContract.methods.payWinner().send({
         from: address,
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
-      const endTime = performance.now()
-      setSuccessMsg(`Winner paid. Time taken: ${endTime - startTime} milliseconds`)
-      const date = new Date(endTime-startTime);
-      console.log(`${date.getMinutes()}:${date.getSeconds()}`)
-
+     
       console.log(`lottery id :: ${lotteryId}`)
       const winnerAddress = await lcContract.methods.lotteryHistory(lotteryId).call()
       setSuccessMsg(`The winner is ${winnerAddress}`)
