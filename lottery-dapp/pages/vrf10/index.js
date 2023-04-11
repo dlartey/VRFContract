@@ -234,7 +234,7 @@ export default function Home() {
 
                 <div className='card has-background-link'>
                   <div className='card-content mt-4 has-text-light'>
-                  <p>Contract address for VRF: 0x78761F4B128Ab2f4abBeecb4c8af68B20E0B30f1</p>
+                  <p>Contract address for VRF: 0x95920F7301249419A8a397eD7E33f31a640aCC09</p>
                     <p>Enter Lottery (0.01 ETH required)</p>
                     <button onClick={enterLotteryHandler} className='button is-dark is-large mt-3'>
                       Enter

@@ -4,7 +4,7 @@ const lotteryAbi = [{"inputs":[{"internalType":"uint64","name":"subscriptionId",
 const lotteryContract = web3 => {
     return new web3.eth.Contract(
         lotteryAbi,
-        "0x78761F4B128Ab2f4abBeecb4c8af68B20E0B30f1"
+        "0x95920F7301249419A8a397eD7E33f31a640aCC09"
     )
 }
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Reference: https://github.com/jspruance/block-explorer-tutorials/blob/main/smart-contracts/solidity/Lottery.sol lines 4-91
-// Reference: https://www.youtube.com/watch?v=HR679xTt8tg 4-91
+// Reference: https://www.youtube.com/watch?v=HR679xTt8tg lines 4-91
 pragma solidity ^0.8.11;
 // This defines solidity version we are using
 

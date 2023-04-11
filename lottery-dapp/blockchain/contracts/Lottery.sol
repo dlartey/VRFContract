@@ -11,7 +11,6 @@ import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 
 // Reference: https://github.com/jspruance/block-explorer-tutorials/blob/main/apps/Lottery/lottery/contracts/Lottery.sol
 // Lines 122-156, lines 20-24
-
 contract VRFv2Consumer is VRFConsumerBaseV2 {
     event RequestSent(uint256 requestId, uint32 numWords);
     event RequestFulfilled(uint256 requestId, uint256[] randomWords);
@@ -117,7 +116,6 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         return (request.fulfilled, request.randomWords);
     }
 
-    // additions
     // Gets the balance of the contract
     function getBalance() public view returns (uint) {
         return address(this).balance;
