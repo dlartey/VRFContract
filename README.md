@@ -50,3 +50,8 @@ To run the dApp, type
 ~ npm run dev
 ```
 inside the [./lottery-dapp/](./lottery-dapp/) folder. This should run the application if everything has gone smoothly.
+
+
+### Example of tests which run
+![image](https://user-images.githubusercontent.com/58071586/235549946-86a6251b-a4c2-49f8-a1ff-bdd57a1bea0e.png)
+
