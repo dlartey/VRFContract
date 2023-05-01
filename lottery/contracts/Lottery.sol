@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: MIT
 // An example of a consumer contract that relies on a subscription for funding.
 pragma solidity ^0.8.11;
-
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/ConfirmedOwner.sol";
 
 // Reference: https://remix.ethereum.org/#url=https://docs.chain.link/samples/VRF/VRFv2Consumer.sol
-// Lines 15-118
+// Lines 14-15, 25-32, 38-98, 118
 
 // Reference: https://github.com/jspruance/block-explorer-tutorials/blob/main/apps/Lottery/lottery/contracts/Lottery.sol
-// Lines 122-156, lines 20-24
+// Lines 115-138, lines 18-22, 100-108
 contract VRFv2Consumer is VRFConsumerBaseV2 {
     event RequestSent(uint256 requestId, uint32 numWords);
     event RequestFulfilled(uint256 requestId, uint256[] randomWords);
@@ -32,34 +31,16 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         public s_requests; /* requestId --> requestStatus */
     VRFCoordinatorV2Interface COORDINATOR;
 
-    // Your subscription ID.
     uint64 s_subscriptionId;
-
-    // past requests Id.
     uint256[] public requestIds;
-    uint256 public lastRequestId; // same as randomResult
+    uint256 public lastRequestId; 
 
     bytes32 keyHash =
         0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15;
-
-    // Depends on the number of requested values that you want sent to the
-    // fulfillRandomWords() function. Storing each word costs about 20,000 gas,
-    // so 100,000 is a safe default for this example contract. Test and adjust
-    // this limit based on the network that you select, the size of the request,
-    // and the processing of the callback request in the fulfillRandomWords()
-    // function.
     uint32 callbackGasLimit = 100000;
-
-    // The default is 3, but you can set this higher.
     uint16 requestConfirmations = 3;
-
-    // For this example, retrieve 2 random values in one request.
-    // Cannot exceed VRFCoordinatorV2.MAX_NUM_WORDS.
     uint32 numWords = 1;
 
-    /**
-     * GOERLI COORDINATOR: 0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D
-     */
     constructor(
         uint64 subscriptionId
     )
@@ -126,19 +107,23 @@ contract VRFv2Consumer is VRFConsumerBaseV2 {
         return players;
     }
 
+     // Gets everyone entered into the lottery
+    function getPlayerLength() public view returns (uint) {
+        return players.length;
+    }
+
     // Enters everyone into the lottery
     function enter() public payable {
         require(msg.value > .01 ether);
-        // address of player entering lottery
         players.push(payable(msg.sender));
     }
 
+    // Pays the lottery Winner
     function payWinner() public onlyowner {
         require(
             randomResult > 0,
             "Must have a source of randomness before choosing winner"
         );
-        // Run migrations & copy
         uint index = randomResult % players.length;
         players[index].transfer(address(this).balance);
         lotteryHistory[lotteryId] = players[index];
