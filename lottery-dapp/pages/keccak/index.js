@@ -79,9 +79,12 @@ export default function Home() {
       await lcContract.methods.enter().send({
         from: address,
         value: '15000000000000000',
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
+
       updateState()
     } catch (err) {
       setError(err.message)
@@ -228,7 +231,7 @@ export default function Home() {
                 <div className='card has-background-link'>
                   <div className='card-content mt-4 has-text-light'>
                   <p>Contract address for VRF: 0x6F99f6fA8C8536CB21ab7aEe7D61b7542d988C06</p>
-                    <p>Enter Lottery (0.01 ETH required)</p>
+                    <p>Enter Lottery (0.015 ETH required)</p>
                     <button onClick={enterLotteryHandler} className='button is-dark is-large mt-3'>
                       Enter
                     </button>
@@ -275,36 +278,6 @@ export default function Home() {
 
               {/* Shows information about lottery pot & history */}
               <div className={`${styles.lotteryinfo} column is-one-third`}>
-                {/* Consists of Lottery History, Lottery Pot & Lottery Players */}
-                <section className='mt-5'>
-                  {/* Bulma class to style the information */}
-                  <div className='card has-background-link has-text-light'>
-                    <div className='card-content'>
-                      <div className='content'>
-                        <h2 className='has-text-light'>Lottery History</h2>
-                        {/* Custom className */}
-
-                        {
-                          (lotteryHistory && lotteryHistory.length > 0) && lotteryHistory.map(item => {
-                            if (lotteryId != item.id) {
-                              return <div className='history-entry mt-3' key={item.id}>
-                                <div className='has-text-light'> Lottery #{item.id} Winner:</div>
-                                <div>
-                                  <a className='has-text-light' href={`https://goerli.etherscan.io/address/${item.address}`} target='_ '>
-                                    {item.address}
-                                  </a>
-                                </div>
-                              </div>
-                            }
-
-                          })
-                        }
-
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
                 {/* Second Bulma Card */}
                 <section className='mt-5'>
                   <div className='card has-background-link has-text-light'>
@@ -342,6 +315,38 @@ export default function Home() {
                     </div>
                   </div>
                 </section>
+                
+                {/* Consists of Lottery History, Lottery Pot & Lottery Players */}
+                <section className='mt-5'>
+                  {/* Bulma class to style the information */}
+                  <div className='card has-background-link has-text-light'>
+                    <div className='card-content'>
+                      <div className='content'>
+                        <h2 className='has-text-light'>Lottery History</h2>
+                        {/* Custom className */}
+
+                        {
+                          (lotteryHistory && lotteryHistory.length > 0) && lotteryHistory.map(item => {
+                            if (lotteryId != item.id) {
+                              return <div className='history-entry mt-3' key={item.id}>
+                                <div className='has-text-light'> Lottery #{item.id} Winner:</div>
+                                <div>
+                                  <a className='has-text-light' href={`https://goerli.etherscan.io/address/${item.address}`} target='_ '>
+                                    {item.address}
+                                  </a>
+                                </div>
+                              </div>
+                            }
+
+                          })
+                        }
+
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                
 
               </div>
             </div>

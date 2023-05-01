@@ -83,9 +83,12 @@ export default function Home() {
       await lcContract.methods.enter().send({
         from: address,
         value: '15000000000000000',
-        gas: 300000,
+        gas: null,
         gasPrice: null
+      }).on('receipt', function(receipt){
+        console.log(receipt)
       })
+
       updateState()
     } catch (err) {
       setError(err.message)
@@ -146,8 +149,6 @@ export default function Home() {
       }).on('receipt', function(receipt){
         console.log(receipt)
       })
-      const date = new Date(endTime-startTime);
-      console.log(`${date.getMinutes()}:${date.getSeconds()}`)
 
       console.log(`lottery id :: ${lotteryId}`)
       const winnerAddress = await lcContract.methods.lotteryHistory(lotteryId).call()
@@ -238,7 +239,7 @@ export default function Home() {
                 <div className='card has-background-link'>
                   <div className='card-content mt-4 has-text-light'>
                   <p>Contract address for VRF: 0xe4904B045022Fe883E29Ca2Ce6f378f647Ee5b92</p>
-                    <p>Enter Lottery (0.01 ETH required)</p>
+                    <p>Enter Lottery (0.015 ETH required)</p>
                     <button onClick={enterLotteryHandler} className='button is-dark is-large mt-3'>
                       Enter
                     </button>
