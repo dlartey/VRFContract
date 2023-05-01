@@ -43,7 +43,7 @@ To run tests, type
 ```
 ~ truffle test
 ```
-inside the [./lotter/](./lottery/), which will run all the tests.
+inside the [./lottery/](./lottery/), which will run all the tests.
 
 To run the dApp, type
 ```
